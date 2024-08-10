@@ -16,3 +16,16 @@ az account list
 az account set --subscription=<subscription id>
 ```
 
+### Terraform Commands
+```sh
+terraform init
+
+terraform validate
+
+terraform plan
+
+terraform apply
+
+terraform apply --auto-approve
+```
+
