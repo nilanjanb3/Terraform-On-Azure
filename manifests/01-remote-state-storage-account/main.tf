@@ -10,6 +10,11 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "3.114.0"
     }
+
+    random = {
+      source  = "hashicorp/random"
+      version = "3.1.0"
+    }
   }
 }
 
@@ -31,19 +36,20 @@ resource "azurerm_resource_group" "terraform_rg" {
 
   # Set tags for the resource group
   tags = {
-    Environment = "Dev"
-    Team        = "DevOps"
-    Owner       = "Nilanjan"
-    Project     = "Terraform"
-    Usage       = "Terraform Remote State"
+    Team  = "DevOps"
+    Usage = "Terraform Remote State"
   }
 }
-
+resource "random_string" "random_stg_suffix" {
+  length  = 5
+  special = false
+  upper   = false
+}
 # This resource block creates a new storage account in Azure
 
 resource "azurerm_storage_account" "terraform_storage" {
   # Set the name of the storage account
-  name = "nilanjanremotetfstate"
+  name = "nilanjanremotetfstate${random_string.random_stg_suffix.result}"
 
   # Set the resource group name for the storage account
   resource_group_name = azurerm_resource_group.terraform_rg.name
@@ -59,11 +65,8 @@ resource "azurerm_storage_account" "terraform_storage" {
 
   # Set tags for the storage account
   tags = {
-    Environment = "Dev"
-    Team        = "DevOps"
-    Owner       = "Nilanjan"
-    Project     = "Terraform"
-    Usage       = "Terraform Remote State"
+    Team  = "DevOps"
+    Usage = "Terraform Remote State"
   }
 }
 
