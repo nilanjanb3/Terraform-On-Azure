@@ -41,16 +41,16 @@ resource "azurerm_subnet_network_security_group_association" "app_subnet_nsg_ass
 locals {
   app_inbound_ports_map = {
     # SSH
-    "100" = "22"
+    "100" : "22"
 
     # HTTP
-    "110" = "80"
+    "110" : "80"
 
     # HTTPS
-    "120" = "443"
+    "120" : "443"
 
     # Tomcat
-    "130" = "8080"
+    "130" : "8080"
   }
 }
 

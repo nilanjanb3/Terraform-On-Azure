@@ -40,11 +40,27 @@ resource "azurerm_subnet_network_security_group_association" "bastion_subnet_nsg
 # Create a local map of inbound ports for the bastion host
 locals {
   bastion_inbound_ports_map = {
-    # SSH
-    "100" = "22"
+    # HTTPS
+    "100" : {
+      "Port" = "443"
+      "Type" = "Inbound"
+      }
 
+    # SSH
+    "110" : {
+      "Port" = "22"
+      "Type" = "Outbound"
+      }
     # RDP
-    "110" = "3389"
+    "120" : {
+      "Port" = "3389"
+      "Type" = "Outbound"
+      }
+    # HTTPS
+    "130" : {
+      "Port" = "443"
+      "Type" = "Outbound"
+      }
   }
 }
 
@@ -54,7 +70,7 @@ resource "azurerm_network_security_rule" "bastion_nsg_rule" {
   for_each = local.bastion_inbound_ports_map
 
   # The name of the network security rule
-  name = "Rule-${each.value}"
+  name = "Rule-${each.value.Port}-${each.value.Type}"
 
   # The priority of the network security rule
   priority = each.key
@@ -66,7 +82,7 @@ resource "azurerm_network_security_rule" "bastion_nsg_rule" {
   protocol = "Tcp"
 
   # The direction attribute
-  direction = "Inbound"
+  direction = each.value.Type
 
   # The source port range attribute
   source_port_range = "*"
@@ -78,7 +94,7 @@ resource "azurerm_network_security_rule" "bastion_nsg_rule" {
   destination_address_prefix = "*"
 
   # The destination port range attribute
-  destination_port_range = each.value
+  destination_port_range = each.value.Port
 
   # The resource group name attribute
   resource_group_name = azurerm_resource_group.rg.name
@@ -133,4 +149,5 @@ resource "azurerm_bastion_host" "name" {
     # Public IP Address ID associated with the Bastion Host
     public_ip_address_id = azurerm_public_ip.bastion_public_ip.id
   }
+  depends_on = [ azurerm_subnet_network_security_group_association.bastion_subnet_nsg_association ]
 }
