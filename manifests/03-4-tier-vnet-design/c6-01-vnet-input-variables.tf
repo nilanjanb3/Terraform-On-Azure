@@ -104,7 +104,7 @@ variable "bastion_subnet_name" {
     that will be created in Azure.
   EOT
   type        = string
-  default     = "bastionsubnet"
+  default     = "AzureBastionSubnet"
 }
 
 variable "bastion_subnet_address_space" {
@@ -117,4 +117,3 @@ variable "bastion_subnet_address_space" {
   type        = list(string)
   default     = ["10.0.100.0/24"]
 }
-

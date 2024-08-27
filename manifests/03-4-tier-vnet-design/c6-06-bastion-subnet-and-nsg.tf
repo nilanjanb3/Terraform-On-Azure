@@ -33,7 +33,7 @@ resource "azurerm_subnet_network_security_group_association" "bastion_subnet_nsg
   # The network security group id
   network_security_group_id = azurerm_network_security_group.bastionnsg.id
 
-  # Create the network security rules after the network security group is created
+  # Do the association after the network security group and subnet are created
   depends_on = [azurerm_network_security_rule.bastion_nsg_rule]
 }
 
@@ -87,3 +87,50 @@ resource "azurerm_network_security_rule" "bastion_nsg_rule" {
   network_security_group_name = azurerm_network_security_group.bastionnsg.name
 }
 
+
+# Locals block for naming conventions
+locals {
+  # Naming convention for the Bastion Public IP
+  bastion_public_ip_name = "bastionpublicip"
+
+  # Naming convention for the Bastion Host
+  bastion_host_name = "bastionhost"
+
+  # Naming convention for the Bastion IP Configuration
+  bastion_ip_configuration_name = "bastionipconfig"
+}
+
+# Resource block for creating the Bastion Public IP
+# This is a static, standard SKU Public IP
+resource "azurerm_public_ip" "bastion_public_ip" {
+  # Name of the Public IP
+  name                = local.bastion_public_ip_name
+  # Location of the Public IP
+  location            = azurerm_resource_group.rg.location
+  # Resource group in which the Public IP is created
+  resource_group_name = azurerm_resource_group.rg.name
+  # Allocation method for the Public IP
+  allocation_method   = "Static"
+  # SKU of the Public IP
+  sku                 = "Standard"
+}
+
+# Resource block for creating the Bastion Host
+# This is a managed service for securely accessing Azure Virtual Machines
+resource "azurerm_bastion_host" "name" {
+  # Resource group in which the Bastion Host is created
+  resource_group_name = azurerm_resource_group.rg.name
+  # Name of the Bastion Host
+  name = local.bastion_host_name
+  # Location of the Bastion Host
+  location = azurerm_resource_group.rg.location
+  # IP configuration of the Bastion Host
+  ip_configuration {
+    # Name of the IP Configuration
+    name                 = local.bastion_ip_configuration_name
+    # Subnet ID to which the Bastion Host is associated
+    subnet_id            = azurerm_subnet.bastionsubnet.id
+    # Public IP Address ID associated with the Bastion Host
+    public_ip_address_id = azurerm_public_ip.bastion_public_ip.id
+  }
+}
