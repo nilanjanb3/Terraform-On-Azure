@@ -7,6 +7,7 @@ This directory contains Terraform configuration files to create and manage a 4-t
 In this configuration, a 4-tier Virtual Network is created in Azure. The setup includes defining the Virtual Network's name, location, address space, and tags. The configurations are parameterized using input variables for flexibility and reusability.
 
 <img src="../../diagrams/4-Tier-Vnet.png" />
+
 ## Directory Structure
 
 * `c1-versions.tf`: Configures the Terraform version and provider versions.
