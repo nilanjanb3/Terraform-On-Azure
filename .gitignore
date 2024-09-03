@@ -39,5 +39,4 @@ terraform.rc
 # Ignore Terraform lock files
 # **/.terraform.lock.hcl
 
-**/app-scripts
 **/ssh-keys
