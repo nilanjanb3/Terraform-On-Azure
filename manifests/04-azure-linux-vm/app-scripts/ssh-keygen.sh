@@ -6,4 +6,4 @@ ssh-keygen \
  -t rsa \
  -b 4069 \
  -C "azureuser@myserver" \
- -f $(pwd)/../ssh-keys/terraform-azure.pub
+ -f $(pwd)/ssh-keys/terraform-azure.pub
