@@ -1,0 +1,1 @@
+# Variable file for web Linux VM public ip
